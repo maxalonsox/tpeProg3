@@ -1,70 +1,68 @@
 package tpeProg3;
 
+import java.util.*;
+
 public class Procesador {
-    private String idProcesador;
-    private String codigoProcesador;
-    private boolean refrigerado;
-    private Integer anioFuncionamiento;
-    private int cantTareasCriticasPermitidas;
-    private int cantTareasCriticasProcesadas;
-    private final static int MAX_TAREAS_CRITICAS = 2;
+    private String id;
+    private String codigo;
+    private boolean estaRefrigerado;
+    private int anoFuncionamiento;
+    private List<Tarea> tareasAsignadas;
 
-
-    public Procesador(String idProcesador, String codigoProcesador, boolean refrigerado, Integer anioFuncionamiento ) {
-        this.idProcesador = idProcesador;
-        this.codigoProcesador = codigoProcesador;
-        this.refrigerado = refrigerado;
-        this.anioFuncionamiento = anioFuncionamiento;
-        this.cantTareasCriticasPermitidas = MAX_TAREAS_CRITICAS;
-        this.cantTareasCriticasProcesadas = 0;
+    public Procesador(String id, String codigo, boolean estaRefrigerado, int anoFuncionamiento) {
+        this.id = id;
+        this.codigo = codigo;
+        this.estaRefrigerado = estaRefrigerado;
+        this.anoFuncionamiento = anoFuncionamiento;
+        this.tareasAsignadas = new ArrayList<>();
     }
-    public String getIdProcesador() {
-        return idProcesador;
-    }
-
-    public void setIdProcesador(String idProcesador) {
-        this.idProcesador = idProcesador;
-    }
-
-    public String getCodigoProcesador() {
-        return codigoProcesador;
+    
+    public Procesador(Procesador p) {
+    	this.id = p.getId();
+    	this.codigo = p.getCodigo();
+    	this.estaRefrigerado = p.estaRefrigerado();
+    	this.anoFuncionamiento = p.getAnoFuncionamiento();
+    	this.tareasAsignadas = new ArrayList<>();
+    	for (Tarea t: p.getTareasAsignadas()) {
+    		this.tareasAsignadas.add(t);
+    	}
     }
 
-    public void setCodigoProcesador(String codigoProcesador) {
-        this.codigoProcesador = codigoProcesador;
+    public String getId() { return id; }
+    
+    public String getCodigo() { return codigo; }
+    
+    public boolean estaRefrigerado() { return estaRefrigerado; }
+    
+    public int getAnoFuncionamiento() { return anoFuncionamiento; }
+    
+    public List<Tarea> getTareasAsignadas() {
+    	ArrayList<Tarea> copy = new ArrayList<>();
+    	for (Tarea t: this.tareasAsignadas) copy.add(t);
+    	return copy;
     }
-
-    public boolean esRefrigerado() {
-        return refrigerado;
+    
+    public int getTiempoMaximoEjecucion() {
+    	int tiempoMaximo = 0;
+    	for (Tarea t: this.tareasAsignadas) tiempoMaximo += t.getTiempoEjecucion();
+    	return tiempoMaximo;
     }
-
-    public Integer getAnioFuncionamiento() {
-        return anioFuncionamiento;
+    
+    public void asignarTarea(Tarea t) {
+    	this.tareasAsignadas.add(t);
     }
-
-    public void setAnioFuncionamiento(Integer anioFuncionamiento) {
-        this.anioFuncionamiento = anioFuncionamiento;
-    }
-
-    public int getCantTareasCriticasPermitidas() {
-        return cantTareasCriticasPermitidas;
-    }
-
-    public int getCantTareasCriticasProcesadas() {
-        return cantTareasCriticasProcesadas;
-    }
-
-    public void setCantTareasCriticasProcesadas(int cantTareasCriticasProcesadas) {
-        this.cantTareasCriticasProcesadas = cantTareasCriticasProcesadas;
+    
+    public void desasignarTarea(Tarea t) {
+    	this.tareasAsignadas.remove(t);
     }
 
     @Override
     public String toString() {
         return "Procesador{" +
-                "idProcesador='" + idProcesador + '\'' +
-                ", codigoProcesador='" + codigoProcesador + '\'' +
-                ", refrigerado=" + refrigerado +
-                ", anioFuncionamiento=" + anioFuncionamiento +
+                "id='" + id + '\'' +
+                ", codigo='" + codigo + '\'' +
+                ", estaRefrigerado=" + estaRefrigerado +
+                ", anoFuncionamiento=" + anoFuncionamiento +
                 '}';
     }
 }

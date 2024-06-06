@@ -3,7 +3,6 @@ package tpeProg3.utils;
 import tpeProg3.Procesador;
 import tpeProg3.Tarea;
 import tpeProg3.Tree;
-import tpeProg3.TreeNode;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +10,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class CSVReader {
@@ -44,7 +42,7 @@ public class CSVReader {
         // lines.get(0) tiene la primer linea del archivo
         // lines.get(1) tiene la segunda linea del archivo... y así
         ArrayList<String[]> lines = this.readContent(processorPath);
-
+        
         for (String[] line: lines) {
             // Cada linea es un arreglo de Strings, donde cada posicion guarda un elemento
             String id = line[0].trim();
@@ -53,7 +51,7 @@ public class CSVReader {
             Integer anio = Integer.parseInt(line[3].trim());
             Procesador p = new Procesador(id,codigo,refrigerado,anio);
 
-            procesadoresHashMap.put(p.getIdProcesador(), p);
+            procesadoresHashMap.put(p.getId(), p);
         }
     }
 

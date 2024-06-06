@@ -1,32 +1,38 @@
 package tpeProg3;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class Solucion {
-    protected Integer tiempoMaximo;
-    protected HashMap<String, List<Tarea>> asignaciones;
+	protected List<Tarea> tareas;
+    protected List<Procesador> procesadores;
 
-    public Solucion(Integer tiempoMaximo, HashMap<String, Procesador> procesadores) {
-        this.tiempoMaximo = tiempoMaximo;
-        this.asignaciones = new HashMap<>();
+    public Solucion(List<Tarea> t, List<Procesador> p) {
+        this.tareas = t;
+        this.procesadores = p;
+    }
+    
+    public boolean puedeAsignar(Procesador procesador, Tarea tarea, HashMap<String,Procesador> asignaciones, int tiempoMaxSinRefrigeracion) {
+        int tareasCriticas = 0;
+        int tiempoTotal = 0;
 
-        for(Procesador p : procesadores.values()){
-            this.asignaciones.put(p.getIdProcesador(), new ArrayList<>());
+        for (Procesador p: asignaciones.values()) {
+            if (p.equals(procesador)) {
+            	for (Tarea t : p.getTareasAsignadas()) {
+            		if (t.esCritica()) {
+            			tareasCriticas++;
+            		}
+            		tiempoTotal += t.getTiempoEjecucion();            		
+            	}
+            }
         }
-    }
 
-    public HashMap<String, List<Tarea>> getAsignaciones(){
-        return this.asignaciones;
+        if (tarea.esCritica() && tareasCriticas >= 2) {
+            return false;
+        }
+        if (!procesador.estaRefrigerado() && (tiempoTotal + tarea.getTiempoEjecucion() > tiempoMaxSinRefrigeracion)) {
+            return false;
+        }
+        return true;
     }
-    public Integer getTiempoMaximo(){
-        return this.tiempoMaximo;
-    }
-
-    public void setTiempoMaximo(Integer tiempoMaximo) {
-        this.tiempoMaximo = tiempoMaximo;
-    }
-
-    public abstract Solucion resolver(Integer tiempoMaximo, HashMap<String,Procesador> procesadorHashMap, ArrayList<Tarea> tareas);
 }
+

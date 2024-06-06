@@ -1,98 +1,68 @@
 package tpeProg3;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Backtracking extends Solucion{
-    private int cantidadEstadosGenerados;
-    private HashMap<String, List<Tarea>> mejoresAsignaciones;
+    private int estadosGenerados;
 
-    public Backtracking(Integer tiempoMaximo, HashMap<String, Procesador> procesadores) {
-        super(tiempoMaximo, procesadores);
-        this.cantidadEstadosGenerados = 0;
-        this.mejoresAsignaciones = new HashMap<>();
-        // Initialize mejoresAsignaciones with empty lists
-        for (String idProcesador : procesadores.keySet()) {
-            this.mejoresAsignaciones.put(idProcesador, new ArrayList<>());
+    public Backtracking(List<Tarea> tareas, List<Procesador> procesadores) {
+        super(tareas, procesadores);
+    }
+
+    /*
+     * Estrategia: Backtracking para asignación de tareas minimizando el tiempo de ejecución máximo.
+     */
+    public void backtrackingAsignacion(int tiempoMaxSinRefrigeracion) {
+        estadosGenerados = 0;
+        HashMap<String,Procesador> asignaciones = new HashMap<>();
+        Asignacion mejorSolucion = new Asignacion();
+        for (Procesador p: procesadores) asignaciones.put(p.getId(),p);
+        backtrack(asignaciones, 0, tiempoMaxSinRefrigeracion, mejorSolucion);
+        imprimirSolucion(mejorSolucion);
+    }
+
+    private void backtrack(HashMap<String,Procesador> asignaciones, int index, int tiempoMaxSinRefrigeracion, Asignacion mejorSolucion) {
+    	if (index == tareas.size()) { //Estoy en una hoja -> Calculo solución
+    		int tiempoAsignacion = 0;
+            for (Procesador p : asignaciones.values()) {
+                tiempoAsignacion = Math.max(p.getTiempoMaximoEjecucion(), tiempoAsignacion);
+            }
+
+            int mejorTiempo = 0;
+            for (Procesador p : mejorSolucion.getMejorSolucion().values()) {
+                mejorTiempo = Math.max(p.getTiempoMaximoEjecucion(), mejorTiempo);
+            }
+
+            if (mejorSolucion.isEmpty() || tiempoAsignacion < mejorTiempo) {
+                mejorSolucion.setMejorSolucion(asignaciones);
+            }
+        } else {
+        	Tarea tarea = this.tareas.get(index);
+        	for (Procesador procesador : this.procesadores) {
+        		if (puedeAsignar(procesador, tarea, asignaciones, tiempoMaxSinRefrigeracion)) {
+        			estadosGenerados++; //Solo genera el estado si se puede asignar la Tarea a ese Procesador.
+        			asignaciones.get(procesador.getId()).asignarTarea(tarea);
+        			backtrack(asignaciones, index + 1, tiempoMaxSinRefrigeracion, mejorSolucion);
+        			asignaciones.get(procesador.getId()).desasignarTarea(tarea);
+        		}
+        	}	
         }
     }
 
-    public int getCantidadEstadosGenerados() {
-        return cantidadEstadosGenerados;
-    }
+    private void imprimirSolucion(Asignacion mejorSolucion) {
+        int tiempoMayor = 0;
+        System.out.println("BACKTRACKING");
+        for (Procesador p: mejorSolucion.getMejorSolucion().values()) {
+            tiempoMayor = Math.max(tiempoMayor, p.getTiempoMaximoEjecucion());
 
-    @Override
-    public Backtracking resolver(Integer tiempoMaximoNoRefrigerado, HashMap<String, Procesador> procesadorHashMap, ArrayList<Tarea> tareas) {
-        ArrayList<Procesador> procesadores = new ArrayList<>(procesadorHashMap.values());
-        backtrack(0, procesadores, tareas, tiempoMaximoNoRefrigerado);
-        // Update the asignaciones with the best found solution
-        this.asignaciones = new HashMap<>(this.mejoresAsignaciones);
-        return this;
-    }
-
-    private void backtrack(Integer tareaActual, ArrayList<Procesador> procesadores, ArrayList<Tarea> tareas, Integer tiempoMaximoNoRefrigerado){
-        cantidadEstadosGenerados++;
-        if(tareaActual < tareas.size()){
-            Tarea tarea = tareas.get(tareaActual); // Me guardo la tarea que quiero procesar
-            for(Procesador p : procesadores){
-                if(esAsignable(tarea, p, tiempoMaximoNoRefrigerado)){
-                    asignar(tarea, p);
-                    backtrack(tareaActual + 1, procesadores, tareas, tiempoMaximoNoRefrigerado);
-                    desasignar(tarea, p);
-                }
+            System.out.println("\nPROCESADOR " + p.getId() + ":");
+            for (Tarea t : p.getTareasAsignadas()) {
+            	System.out.print("(" + t.getId() + ") (" + t.getTiempoEjecucion() + ")");
+            	if (t.esCritica()) System.out.print(" (C)\n");
+            	else System.out.print("\n");
             }
         }
-        int maxTiempoActual = 0;
-        for (Procesador p : procesadores){ // Calcular el tiempo max de todos los procesadores
-            maxTiempoActual = Math.max(maxTiempoActual, getTiempoProcesador(p));
-        }
-        if(maxTiempoActual < this.getTiempoMaximo()){ // Actualizar la mejor asignacion si hay una mejor
-            this.setTiempoMaximo(maxTiempoActual);
-            actualizarMejoresAsignaciones(procesadores);
-        }
-    }
-
-    private boolean esAsignable(Tarea t, Procesador p, int tiempoMaximoNoRefrigerado){ // Verificar que el procesador no refrigerado no exceda el tiempo max permitido
-        // Verificar si el procesador puede aceptar más tareas críticas
-        if (t.esCritica() && (p.getCantTareasCriticasPermitidas() == p.getCantTareasCriticasProcesadas())) {
-            return false;
-        }
-        // Verificar si el procesador no refrigerado excede el tiempo máximo permitido
-        if (!p.esRefrigerado() && (getTiempoProcesador(p) + t.getTiempoEjecucion() > tiempoMaximoNoRefrigerado)) {
-            return false;
-        }
-        return true;
-    }
-
-    private int getTiempoProcesador(Procesador p){
-        int tiempoTotal = 0;
-        for(Tarea t : this.asignaciones.get(p.getIdProcesador())){ // Esto devuelve una lista de tareas asociadas a este procesador y sumo todos sus tiempos
-            tiempoTotal += t.getTiempoEjecucion();
-        }
-        return tiempoTotal;
-    }
-
-    private void asignar(Tarea t, Procesador p){
-        this.asignaciones.get(p.getIdProcesador()).add(t);
-    }
-
-    private void desasignar(Tarea t, Procesador p){
-        this.asignaciones.get(p.getIdProcesador()).remove(t);
-    }
-
-    private void actualizarMejoresAsignaciones(List<Procesador> procesadores){
-        for (Procesador p : procesadores) {
-            List<Tarea> mejoresTareas = new ArrayList<>(this.asignaciones.get(p.getIdProcesador()));
-            this.mejoresAsignaciones.put(p.getIdProcesador(), mejoresTareas);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Backtracking{" +
-                "cantidadEstadosGenerados=" + cantidadEstadosGenerados +
-                ", mejoresAsignaciones=" + mejoresAsignaciones +
-                '}';
+        System.out.println("\nTiempo máximo de ejecución: " + tiempoMayor);
+        System.out.println("Cantidad de estados generados: " + estadosGenerados);
     }
 }

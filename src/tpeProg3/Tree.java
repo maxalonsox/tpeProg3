@@ -221,7 +221,7 @@ public class Tree {
 
     private void getTareasEntreNivelDePrioridad(TreeNode actual, Integer limiteInferior, Integer limiteSuperior, List<Tarea> result) { //O(n) n:elementos del arbol
         if (actual != null) {
-            if ((actual.getValue().getPrioridad() > limiteInferior) && (actual.getValue().getPrioridad() < limiteSuperior)) result.add(actual.getValue());
+            if ((actual.getValue().getNivelPrioridad() > limiteInferior) && (actual.getValue().getNivelPrioridad() < limiteSuperior)) result.add(actual.getValue());
             getTareasEntreNivelDePrioridad(actual.getLeft(), limiteInferior, limiteSuperior, result);
             getTareasEntreNivelDePrioridad(actual.getRight(), limiteInferior, limiteSuperior, result);
         }
