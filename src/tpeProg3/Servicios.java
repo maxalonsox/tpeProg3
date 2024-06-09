@@ -3,7 +3,6 @@ package tpeProg3;
 import tpeProg3.utils.CSVReader;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 // NO modificar la interfaz de esta clase ni sus métodos públicos.
 // Sólo se podrá adaptar el nombre de la clase "Tarea" según sus decisiones
@@ -41,20 +40,22 @@ public class Servicios {
     // las que cumplen el criterio de si es critica o no.
 
     public List<Tarea> servicio2(boolean esCritica) {
-        return tareasMap.values().stream()
-                .filter(tarea -> tarea.esCritica() == esCritica)
-                .collect(Collectors.toList());
+    	ArrayList<Tarea> salida = new ArrayList<>();
+        for (Tarea t: tareasMap.values()) {
+            if (esCritica==t.esCritica()){
+                salida.add(t);
+            }
+        }
+        return salida;
     }
     
 
     // Servicio 3: Obtener todas las tareas entre 2 niveles de prioridad indicados.
     
-    // El servicio 3 es o(n) donde n es la cantidad de tareas
+    // El servicio 3 es o(n) donde n es la cantidad de tareas, ya que debe recorrer todos los nodos del arbol.
 
     public List<Tarea> servicio3(int prioridadInferior, int prioridadSuperior) {
-        return tareasMap.values().stream()
-                .filter(tarea -> tarea.getNivelPrioridad() >= prioridadInferior && tarea.getNivelPrioridad() <= prioridadSuperior)
-                .collect(Collectors.toList());
+    	return tareasTree.getTareasEntreNivelDePrioridad(prioridadInferior, prioridadSuperior);
     }
 
     public List<Procesador> getProcesadores() {

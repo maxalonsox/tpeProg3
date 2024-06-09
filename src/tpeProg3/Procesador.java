@@ -42,6 +42,15 @@ public class Procesador {
     	return copy;
     }
     
+    public int getCantidadTareasCriticas() {
+    	int tareasCriticas = 0;
+    	for (Tarea t: this.tareasAsignadas)
+	    	if (t.esCritica()) {
+				tareasCriticas++;
+			}
+    	return tareasCriticas;
+    }
+    
     public int getTiempoMaximoEjecucion() {
     	int tiempoMaximo = 0;
     	for (Tarea t: this.tareasAsignadas) tiempoMaximo += t.getTiempoEjecucion();

@@ -10,7 +10,7 @@ public class Main {
         Backtracking b = new Backtracking(servicios.getTareas(), servicios.getProcesadores());
         b.backtrackingAsignacion(1000);
 
-//        Greedy g = new Greedy(servicios.getTareas(), servicios.getProcesadores());
-//        g.greedyAsignacion(1000);
+        Greedy g = new Greedy(servicios.getTareas(), servicios.getProcesadores());
+        g.greedyAsignacion(1000);
 	}
 }

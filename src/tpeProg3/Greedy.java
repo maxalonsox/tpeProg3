@@ -14,17 +14,16 @@ public class Greedy extends Solucion{
      * Estrategia: Algoritmo Greedy para asignación de tareas minimizando el tiempo de ejecución máximo.
      */
     public void greedyAsignacion(int tiempoMaxSinRefrigeracion) {
-        HashMap<String,Procesador> asignaciones = new HashMap<>();
-        for (Procesador p: procesadores) asignaciones.put(p.getId(),p);
-        Collections.sort(tareas, Comparator.comparingInt(Tarea::getTiempoEjecucion).reversed());
-        Asignacion solucion = new Asignacion();
-
-        for (Tarea tarea : tareas) {
+    	HashMap<String,Procesador> asignaciones = new HashMap<>();
+    	for (Procesador p: procesadores) asignaciones.put(p.getId(),p);
+    	Asignacion solucion = new Asignacion();
+    	this.cantidadCandidatosConsiderados = 0;
+    	for (Tarea tarea : super.getTareas()) {
             Procesador mejorProcesador = null;
             int mejorTiempoTotal = Integer.MAX_VALUE;
-
-            for (Procesador procesador : procesadores) {
+            for (Procesador procesador : super.getProcesadores()) {
                 if (puedeAsignar(procesador, tarea, asignaciones, tiempoMaxSinRefrigeracion)) {
+                    this.cantidadCandidatosConsiderados++;
                     int tiempoTotal = calcularTiempoTotal(procesador, tarea, asignaciones);
                     if (tiempoTotal < mejorTiempoTotal) {
                         mejorTiempoTotal = tiempoTotal;
@@ -32,10 +31,9 @@ public class Greedy extends Solucion{
                     }
                 }
             }
-
-           if (mejorProcesador != null) {
-        	   asignaciones.get(mejorProcesador.getId()).asignarTarea(tarea);
-           } else {
+            if (mejorProcesador != null) {
+            	asignaciones.get(mejorProcesador.getId()).asignarTarea(tarea);
+            } else {
                 System.out.println("No se pudo asignar la tarea " + tarea.getId());
             }
         }

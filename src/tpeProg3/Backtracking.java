@@ -11,6 +11,8 @@ public class Backtracking extends Solucion{
 
     /*
      * Estrategia: Backtracking para asignación de tareas minimizando el tiempo de ejecución máximo.
+     * Complejidad: Ya que la cantidad de estados generados están dados por la sumatoria de P^T (P¹ + P² + P³ + ... P^T) siendo P la cantidad de procesadores y T la cantidad de tareas.
+     * Para simplificarlo diremos que la complejidad es de O((P^T)P), así siempre la cantidad de estados generados será mejor que esa cantidad.
      */
     public void backtrackingAsignacion(int tiempoMaxSinRefrigeracion) {
         estadosGenerados = 0;
