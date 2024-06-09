@@ -118,9 +118,9 @@ public class Tree {
         if (actual == null)
             System.out.println(" - ");
         else {
-            printPreOrder(actual.getLeft());
+            printInOrder(actual.getLeft());
             System.out.print(actual.getValue() + " ");
-            printPreOrder(actual.getRight());
+            printInOrder(actual.getRight());
         }
     }
 
