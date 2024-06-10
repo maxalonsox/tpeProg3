@@ -1,4 +1,4 @@
-# TPE Programación III - Grupo 38 (Alonso, Michelli)
+# TPE Programación III - Grupo 38 (Alonso - Michelli)
 Usamos las técnicas Backtracking y Greedy para resolver un problema de asignaciones de tareas a distintos procesadores, teniendo en cuenta 2 restricciones, que cada procesador no puede procesar más de 2 tareas críticas, y que los procesadores no refrigerados no pueden dedicar más de X tiempo a las tareas asignadas (este tiempo X es ingresado por parámetro por el usuario).
 
 
