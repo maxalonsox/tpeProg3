@@ -15,20 +15,37 @@ public class Tarea {
         this.nivelPrioridad = nivelPrioridad;
     }
 
-    public String getId() { return id; }
-    public String getNombre() { return nombre; }
-    public int getTiempoEjecucion() { return tiempoEjecucion; }
-    public boolean esCritica() { return esCritica; }
-    public int getNivelPrioridad() { return nivelPrioridad; }
+    public String getId() {
+    	return this.id;
+    }
+    
+    public String getNombre() {
+    	return this.nombre;
+    }
+    
+    public int getTiempoEjecucion() {
+    	return this.tiempoEjecucion;
+    }
+
+    public boolean esCritica() {
+    	return this.esCritica;
+    }
+    public int getNivelPrioridad() {
+    	return this.nivelPrioridad;
+    }
 
     @Override
     public String toString() {
-        return "Tarea{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", tiempoEjecucion=" + tiempoEjecucion +
-                ", esCritica=" + esCritica +
-                ", nivelPrioridad=" + nivelPrioridad +
+        return "{Tarea: " +
+                "id = '" + this.id + '\'' +
+                ", nombre = '" + this.nombre + '\'' +
+                ", tiempoEjecucion = " + this.tiempoEjecucion +
+                ", esCritica = " + this.esCritica +
+                ", nivelPrioridad = " + this.nivelPrioridad +
                 '}';
+    }
+    
+    public boolean equals(Tarea t) {
+    	return (this.getId() == t.getId());
     }
 }

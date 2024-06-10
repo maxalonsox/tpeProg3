@@ -226,49 +226,4 @@ public class Tree {
             getTareasEntreNivelDePrioridad(actual.getRight(), limiteInferior, limiteSuperior, result);
         }
     }
-
-//    public boolean delete(Integer value) {
-//        if (value != null) {
-//            root = delete(root, value);
-//            // Se actualiza el nodo raíz en caso de que se elimine
-//            // Retorna true para indicar que se eliminó el valor
-//            return true;
-//        }
-//        // Si el valor es nulo, retorna false porque no se puede eliminar
-//        return false;
-//    }
-
-//    private TreeNode delete(TreeNode actual, Integer value) {
-//        // Comprueba si el valor a eliminar es menor que el valor del nodo actual
-//        if (value < actual.getValue()) {
-//            // Si es menor, se llama recursivamente al método delete con el nodo izquierdo
-//            actual.setLeft(delete(actual.getLeft(), value));
-//        } else if (value > actual.getValue()) {
-//            // Si es mayor, se llama recursivamente al método delete con el nodo derecho
-//            actual.setRight(delete(actual.getRight(), value));
-//        } else {
-//            // Si el valor es igual al valor del nodo actual, se procede a eliminarlo
-//            // Caso 1: El nodo no tiene hijo izquierdo
-//            if (actual.getLeft() == null) {
-//                // Retorna el hijo derecho del nodo actual (puede ser nulo o no)
-//                return actual.getRight();
-//            }
-//            // Caso 2: El nodo no tiene hijo derecho
-//            else if (actual.getRight() == null) {
-//                // Retorna el hijo izquierdo del nodo actual
-//                return actual.getLeft();
-//            }
-//            // Caso 3: El nodo tiene dos hijos
-//
-//            // Encuentra el nodo con el valor mínimo en el subárbol derecho
-//            TreeNode nodoMenor = getNodoMenorIzquierdo(actual.getRight());
-//            // Copia el valor mínimo al nodo actual
-//            actual.setValue(nodoMenor.getValue());
-//            // Elimina el nodo con el valor mínimo del subárbol derecho
-//            actual.setRight(delete(actual.getRight(), nodoMenor.getValue()));
-//
-//        }
-//        // Retorna el nodo actual modificado
-//        return actual;
-//    }
 }

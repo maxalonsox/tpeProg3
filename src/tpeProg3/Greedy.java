@@ -14,51 +14,41 @@ public class Greedy extends Solucion{
      * Estrategia: Algoritmo Greedy para asignación de tareas minimizando el tiempo de ejecución máximo.
      */
     public void greedyAsignacion(int tiempoMaxSinRefrigeracion) {
-    	HashMap<String,Procesador> asignaciones = new HashMap<>();
-    	for (Procesador p: procesadores) asignaciones.put(p.getId(),p);
-    	Asignacion solucion = new Asignacion();
-    	this.cantidadCandidatosConsiderados = 0;
-    	for (Tarea tarea : super.getTareas()) {
+    	Asignacion solucion = new Asignacion();		//Wrapper que va guardando la asignacion final.
+    	for (Procesador p: procesadores) solucion.setProcesador(p); //Inicializa la asignacion con todos los procesadores y sus listas de tareas asignadas vacías.
+    	for (Tarea tarea : super.getTareas()) {						//Recorre todas las tareas, este es mi conjunto que de estar vacío, es porque hallé una solución.
             Procesador mejorProcesador = null;
             int mejorTiempoTotal = Integer.MAX_VALUE;
             for (Procesador procesador : super.getProcesadores()) {
-                if (puedeAsignar(procesador, tarea, asignaciones, tiempoMaxSinRefrigeracion)) {
+                if (puedeAsignar(procesador, tarea, tiempoMaxSinRefrigeracion)) { 	//Condición para ver si es un candidado posible.
                     this.cantidadCandidatosConsiderados++;
-                    int tiempoTotal = calcularTiempoTotal(procesador, tarea, asignaciones);
-                    if (tiempoTotal < mejorTiempoTotal) {
+                    int tiempoTotal = tarea.getTiempoEjecucion() + procesador.getTiempoMaximoEjecucion();
+                    if (tiempoTotal < mejorTiempoTotal) {							//Si es un candidato mejor, lo actualiza.
                         mejorTiempoTotal = tiempoTotal;
                         mejorProcesador = procesador;
                     }
                 }
             }
-            if (mejorProcesador != null) {
-            	asignaciones.get(mejorProcesador.getId()).asignarTarea(tarea);
-            } else {
-                System.out.println("No se pudo asignar la tarea " + tarea.getId());
-            }
+            if (mejorProcesador != null) solucion.getProcesador(mejorProcesador.getId()).asignarTarea(tarea);  //Si el candidato no es null, lo agrega a la solución, si es null sale del bucle.
+            else break;
         }
-        solucion.setMejorSolucion(asignaciones);
         imprimirAsignaciones(solucion);
-    }
-	
-    private int calcularTiempoTotal(Procesador procesador, Tarea tarea, HashMap<String,Procesador> asignaciones) {
-        return tarea.getTiempoEjecucion() + procesador.getTiempoMaximoEjecucion();
     }
 
     private void imprimirAsignaciones(Asignacion solucion) {
-    	int tiempoMayor = 0;
         System.out.println("GREEDY");
-        for (Procesador p: solucion.getMejorSolucion().values()) {
-            tiempoMayor = Math.max(tiempoMayor, p.getTiempoMaximoEjecucion());
-
-            System.out.println("\nPROCESADOR " + p.getId() + ":");
-            for (Tarea t : p.getTareasAsignadas()) {
-            	System.out.print("(" + t.getId() + ") (" + t.getTiempoEjecucion() + ")");
-            	if (t.esCritica()) System.out.print(" (C)\n");
-            	else System.out.print("\n");
-            }
+        if (solucion.getAllTareasAsignadas().size() < super.getTareas().size()) System.out.print("No se puede hallar una solución con esta técnica."); //Si no se pudieron asignas todas las tareas, avisa que no se puede hallar una solución mediante esta técnica.
+        else {
+        	for (Procesador p: solucion.getMejorSolucion().values()) {
+        		System.out.println("\nPROCESADOR " + p.getId() + ":");
+        		for (Tarea t : p.getTareasAsignadas()) {
+        			System.out.print("(" + t.getId() + ") (" + t.getTiempoEjecucion() + ")");
+        			if (t.esCritica()) System.out.print(" (C)\n");
+        			else System.out.print("\n");
+        		}
+        	}
+        	System.out.println("\nTiempo máximo de ejecución: " + solucion.getTiempoMaximoEjecucion());
+        	System.out.println("Cantidad de candidatos considerados: " + this.cantidadCandidatosConsiderados);
         }
-        System.out.println("\nTiempo máximo de ejecución: " + tiempoMayor);
-        System.out.println("Cantidad de candidatos considerados: " + this.cantidadCandidatosConsiderados);
     }
 }

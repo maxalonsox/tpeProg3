@@ -28,21 +28,29 @@ public class Procesador {
     	}
     }
 
-    public String getId() { return id; }
+    public String getId() {
+    	return this.id;
+    }
     
-    public String getCodigo() { return codigo; }
+    public String getCodigo() {
+    	return this.codigo;
+    }
     
-    public boolean estaRefrigerado() { return estaRefrigerado; }
+    public boolean estaRefrigerado() {
+    	return this.estaRefrigerado;
+    }
     
-    public int getAnoFuncionamiento() { return anoFuncionamiento; }
+    public int getAnoFuncionamiento() {
+    	return this.anoFuncionamiento;
+    }
     
-    public List<Tarea> getTareasAsignadas() {
+    public List<Tarea> getTareasAsignadas() { //Devuelve una copia de la lista de tareas asignadas.
     	ArrayList<Tarea> copy = new ArrayList<>();
     	for (Tarea t: this.tareasAsignadas) copy.add(t);
     	return copy;
     }
     
-    public int getCantidadTareasCriticas() {
+    public int getCantidadTareasCriticas() { //Devuelve el número de tareas críticas que tiene asignadas el procesador.
     	int tareasCriticas = 0;
     	for (Tarea t: this.tareasAsignadas)
 	    	if (t.esCritica()) {
@@ -51,7 +59,7 @@ public class Procesador {
     	return tareasCriticas;
     }
     
-    public int getTiempoMaximoEjecucion() {
+    public int getTiempoMaximoEjecucion() { //Devuelve la suma de los tiempos de ejecución de sus tareas asignadas.
     	int tiempoMaximo = 0;
     	for (Tarea t: this.tareasAsignadas) tiempoMaximo += t.getTiempoEjecucion();
     	return tiempoMaximo;
@@ -67,11 +75,11 @@ public class Procesador {
 
     @Override
     public String toString() {
-        return "Procesador{" +
-                "id='" + id + '\'' +
-                ", codigo='" + codigo + '\'' +
-                ", estaRefrigerado=" + estaRefrigerado +
-                ", anoFuncionamiento=" + anoFuncionamiento +
+        return "{Procesador: " +
+                "id = '" + this.id + '\'' +
+                ", codigo = '" + this.codigo + '\'' +
+                ", estaRefrigerado = " + this.estaRefrigerado +
+                ", anoFuncionamiento = " + this.anoFuncionamiento +
                 '}';
     }
 }
